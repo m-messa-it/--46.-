@@ -1,0 +1,74 @@
+### Базова адреса сервера
+@baseUrl = http://localhost:5000
+
+### 1. Отримати список усіх відправлень (Успішний статус 200 OK)
+GET {{baseUrl}}/postings
+Accept: application/json
+
+### 2. Отримати відправлення за існуючим ID (200 OK)
+GET {{baseUrl}}/postings/1
+Accept: application/json
+
+### 3. Отримати відправлення за неіснуючим ID (Ситуація: 404 Not Found)
+GET {{baseUrl}}/postings/99999
+Accept: application/json
+
+### 4. Створити нове відправлення з коректними даними (201 Created)
+POST {{baseUrl}}/postings
+Content-Type: application/json
+
+{
+  "from": "Київ",
+  "to": "Одеса",
+  "content": "Книги та зошити",
+  "deliveryType": 0,
+  "weight": 1.2,
+  "width": 20,
+  "height": 10,
+  "depth": 15,
+  "value": 250,
+  "price": 75
+}
+
+### 5. Створити відправлення з некоректними даними (Ситуація: 400 Bad Request - Помилка валідації)
+# Пусте поле "from", відсутній опис "content", від'ємна вага
+POST {{baseUrl}}/postings
+Content-Type: application/json
+
+{
+  "from": "",
+  "to": "Львів",
+  "content": "",
+  "deliveryType": 1,
+  "weight": -5,
+  "width": 10,
+  "height": 10,
+  "depth": 10,
+  "value": 0,
+  "price": 0
+}
+
+### 6. Оновити неіснуюче відправлення (Ситуація: 404 Not Found)
+PUT {{baseUrl}}/postings/99999
+Content-Type: application/json
+
+{
+  "from": "Рівне",
+  "to": "Луцьк",
+  "content": "Оновлений вантаж",
+  "deliveryType": 0,
+  "weight": 2.0,
+  "width": 10,
+  "height": 10,
+  "depth": 10,
+  "value": 100,
+  "price": 60
+}
+
+### 7. Видалити неіснуюче відправлення (Ситуація: 404 Not Found)
+DELETE {{baseUrl}}/postings/99999
+Accept: application/json
+
+### 8. Штучний виклик критичної помилки на сервері (Ситуація: 500 Internal Server Error)
+GET {{baseUrl}}/postings/error-500
+Accept: application/json
